@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,7 @@ else:
     DEBUG = True
 
 
-ALLOWED_HOSTS = ['disquaire.herokuapp.com']
+ALLOWED_HOSTS = ['134.209.88.111']
 
 
 # Application definition
@@ -58,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+   # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'disquaire_project.urls'
@@ -87,11 +88,11 @@ WSGI_APPLICATION = 'disquaire_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql', # on utilise l'adaptateur postgresql
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # on utilise l'adaptateur postgresql
         'NAME': 'disquaire', # le nom de notre base de données créée précédemment
-        'USER': 'celinems', # attention : remplacez par votre nom d'utilisateur !!
-        'PASSWORD': '',
-        'HOST': '',
+        'USER': 'olivierx', # attention : remplacez par votre nom d'utilisateur !!
+        'PASSWORD': '1979',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -142,8 +143,24 @@ INTERNAL_IPS = ['127.0.0.1']
 
 if os.environ.get('ENV') == 'PRODUCTION':
 
-    STATIC_ROOT = os.path.join(BASE_ROOT, 'staticfiles')
+    # STATIC_ROOT = os.path.join(BASE_ROOT, 'staticfiles')
 
+    # # Simplified static file serving.
+    # # https://warehouse.python.org/project/whitenoise/
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+    # Static files settings
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = (
+        os.path.join(PROJECT_ROOT, 'static'),
+    )
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)

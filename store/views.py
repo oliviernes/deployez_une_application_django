@@ -6,8 +6,15 @@ from .models import Album, Artist, Contact, Booking
 from .forms import ContactForm
 from .forms import ContactForm, ParagraphErrorList
 
+import logging
+
+# ...
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 def index(request):
+    POURQUOI MECHANT?
     albums = Album.objects.filter(available=True).order_by('-created_at')[:12]
     context = {
         'albums': albums
@@ -93,4 +100,9 @@ def search(request):
         'albums': albums,
         'title': title
     }
+    logger.info('New search', exc_info=True, extra={
+        # Optionally pass a request and we'll grab any information we can
+        'request': request,
+    })
+
     return render(request, 'store/search.html', context)

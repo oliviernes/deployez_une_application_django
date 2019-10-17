@@ -17,12 +17,18 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
+
 from store import views
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 
 urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^store/', include('store.urls', namespace='store')),
-    url(r'^admin/', admin.site.urls)
+    url(r'^admin/', admin.site.urls),
+    url(r'^sentry-debug/', trigger_error),
 ]
 
 if settings.DEBUG:
@@ -30,3 +36,5 @@ if settings.DEBUG:
     urlpatterns = [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
+
+
